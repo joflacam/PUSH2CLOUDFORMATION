@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: 2010-09-09Allo
 Resources:
   StopInstanceLambda:
     Type: 'AWS::Lambda::Function'
@@ -61,5 +61,4 @@ Resources:
       FunctionName: !GetAtt StopInstanceLambda.Arn
       Action: 'lambda:InvokeFunction'
       Principal: events.amazonaws.com
-      SourceAccount: !Ref 'AWS::AccountId'
       SourceArn: !GetAtt ScheduledRule.Arn
