@@ -1,30 +1,60 @@
----
-Parameters:
-  EC2InstanceType:
-    Description: The Instance Type Chosen for EC2
-    Type: String
-    Default: t2.micro
-    
-Resources:
-  TestInstance:
-    Type: AWS::EC2::Instance
-    Properties:
-      AvailabilityZone: us-east-1a
-      ImageId:ami-0636eac5d73e0e5d7
-      InstanceType: !Ref EC2InstanceType
-      SecurityGroups:
-        - !Ref HTTPSecurityGroup
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Template to Create an EC2 instance in a VPC
 
-  HTTPSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+Parameters:
+
+  ImageId:
+    Type: String
+    Description: 'Linux 2 AMI for US-East-1 Region'
+    Default: 'ami-0636eac5d73e0e5d7'
+  VpcId:
+    Type: String
+    Description: VPC id
+    Default: vpc-024e0bd2ac6919b82
+  SubnetId:
+    Type: String
+    Description: Subnet in which to launch an EC2
+    Default: subnet-04f7b5f44b2803894
+  AvailabilityZone:
+    Type: String
+    Description: Availability Zone into which instance will launch
+    Default: us-east-1a
+  InstanceType:
+    Type: String
+    Description: Choosing  t2 micro because it is free
+    Default: t2.micro
+  KeyName:
+    Description: SSH Keypair to login to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: LINUX
+
+Resources:
+  DemoInstance:
+    Type: 'AWS::EC2::Instance'
     Properties:
-      GroupDescription: Enable port 80 and port 443
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      AvailabilityZone: !Ref AvailabilityZone
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !Ref DemoSecurityGroup
+      SubnetId: !Ref SubnetId
+
+  DemoSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref VpcId
+      GroupDescription: SG to allow SSH access via port 22
       SecurityGroupIngress:
-      - CidrIp: 0.0.0.0/0
-        FromPort: 80
-        IpProtocol: tcp
-        ToPort: 80
-      - CidrIp: 0.0.0.0/0
-        FromPort: 443
-        IpProtocol: tcp
-        ToPort: 443
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: Name
+          Value: SSH-SG
+
+Outputs:
+  DemoInstanceId:
+    Description: Instance Id
+    Value: !Ref DemoInstance
