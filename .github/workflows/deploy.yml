@@ -40,4 +40,4 @@ jobs:
         with:
           name: ec2lambda-stack
           template: ec2lambda.yml
-  
+          capabilities: CAPABILITY_NAMED_IAM
