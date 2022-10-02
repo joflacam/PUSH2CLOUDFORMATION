@@ -12,7 +12,7 @@ on:
       region:
         description: 'AWS Region to deploy to'
         required: true
-        default: 'ap-southeast-1'
+        default: 'us-east-1'
 
 
 jobs:
@@ -38,8 +38,8 @@ jobs:
       - name: Deploy to AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: tekloon-test-stack
-          template: test-stack.yaml
+          name: ec2lambda-stack
+          template: ec2lambda.yml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: "EC2InstanceType=t2.micro"
   
