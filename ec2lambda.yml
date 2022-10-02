@@ -1,5 +1,4 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: ''
 Resources:
   StopInstanceLambda:
     Type: AWS::Lambda::Function
@@ -50,17 +49,12 @@ Resources:
               - logs:PutLogEvents
               - s3-object-lambda:WriteGetObjectResponse
             Resource: '*'
-      Roles:
-        - !Ref 'StopInstanceLambdaRole'
   ScheduledRule:
     Type: AWS::Events::Rule
     Properties:
       Description: ScheduledRule
       ScheduleExpression: cron(0 20 * * ? *)
       State: ENABLED
-      Targets:
-        - Arn: !GetAtt 'StopInstanceLambda.Arn'
-          Id: StopInstanceLambda
   EventBridgePermission:
     Type: AWS::Lambda::Permission
     Properties:
