@@ -1,10 +1,12 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: 2010-09-09
 Resources:
   StopInstanceLambda:
-    Type: AWS::Lambda::Function
+    Type: 'AWS::Lambda::Function'
     Properties:
       Handler: lambda_function.lambda_handler
-      Role: !GetAtt 'StopInstanceLambdaRole.Arn'
+      Role: !GetAtt 
+        - StopInstanceLambdaRole
+        - Arn
       Code:
         S3Bucket: demoec2stopstart
         S3Key: demoec2.zip
@@ -12,55 +14,58 @@ Resources:
       Timeout: 30
       MemorySize: 128
   StopInstanceLambdaRole:
-    Type: AWS::IAM::Role
+    Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
               Service:
                 - lambda.amazonaws.com
             Action:
-              - sts:AssumeRole
+              - 'sts:AssumeRole'
   StopInstanceLambdaPolicies:
-    Type: AWS::IAM::Policy
+    Type: 'AWS::IAM::Policy'
     Properties:
       PolicyName: stop-instance-lambda-policies
       PolicyDocument:
-        Version: '2012-10-17'
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Action:
-              - s3:ListBucket
-              - s3:Getobject
+              - 's3:ListBucket'
+              - 's3:Getobject'
             Resource:
-              - arn:aws:s3:::demoec2stopstart
-              - arn:aws:s3:::demoec2stopstart/*
+              - 'arn:aws:s3:::demoec2stopstart'
+              - 'arn:aws:s3:::demoec2stopstart/*'
           - Effect: Allow
             Action:
-              - ec2:Start*
-              - ec2:Stop*
+              - 'ec2:Start*'
+              - 'ec2:Stop*'
             Resource: '*'
           - Effect: Allow
             Action:
-              - logs:CreateLogGroup
-              - logs:CreateLogStream
-              - logs:PutLogEvents
-              - s3-object-lambda:WriteGetObjectResponse
+              - 'logs:CreateLogGroup'
+              - 'logs:CreateLogStream'
+              - 'logs:PutLogEvents'
+              - 's3-object-lambda:WriteGetObjectResponse'
             Resource: '*'
   ScheduledRule:
-    Type: AWS::Events::Rule
+    Type: 'AWS::Events::Rule'
     Properties:
       Description: ScheduledRule
       ScheduleExpression: cron(0 20 * * ? *)
       State: ENABLED
   EventBridgePermission:
-    Type: AWS::Lambda::Permission
+    Type: 'AWS::Lambda::Permission'
     Properties:
-      FunctionName: !GetAtt 'StopInstanceLambda.Arn'
-      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt 
+        - StopInstanceLambda
+        - Arn
+      Action: 'lambda:InvokeFunction'
       Principal: events.amazonaws.com
       SourceAccount: !Ref 'AWS::AccountId'
-      SourceArn: !GetAtt 'ScheduledRule.Arn'
-
+      SourceArn: !GetAtt 
+        - ScheduledRule
+        - Arn
