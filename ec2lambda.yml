@@ -39,7 +39,6 @@ Resources:
               - 'arn:aws:s3:::demoec2stopstart/*'
           - Effect: Allow
             Action:
-              - 'ec2:Start*'
               - 'ec2:Stop*'
             Resource: '*'
           - Effect: Allow
