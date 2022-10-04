@@ -38,5 +38,5 @@ jobs:
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: test-stack
-          template: lamda_function1.json
+          template: ec2lambda.json
           capabilities: CAPABILITY_NAMED_IAM
