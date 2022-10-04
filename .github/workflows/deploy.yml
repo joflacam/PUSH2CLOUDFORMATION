@@ -30,8 +30,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.ACCESS_KEY_SECRET }}
+          role-to-assume: ${{ secrets.ARN }}
           aws-region: ${{ github.event.inputs.region }}
 
       # Deploy to AWS CloudFormation
@@ -39,5 +38,5 @@ jobs:
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: test-stack
-          template: test-stack.yaml
+          template: lamda_function1.json
           capabilities: CAPABILITY_NAMED_IAM
