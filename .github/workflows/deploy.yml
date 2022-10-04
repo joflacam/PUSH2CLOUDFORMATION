@@ -39,6 +39,6 @@ jobs:
       - name: Deploy to AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: test-stack
+          name: test2-stack
           template: ec2lambda.json
           capabilities: CAPABILITY_NAMED_IAM
